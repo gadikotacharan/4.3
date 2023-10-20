@@ -1,0 +1,34 @@
+[
+	{
+		"_id": 1,
+		"Album-name": "mudhe adiga",
+		"movie": "Herat attack",
+		"composer": "Anup Rubins",
+		"year": 2012
+	},
+
+	{
+		"_id": 2,
+		"Album-name": "Na vayasu",
+		"movie": "Upiri",
+		"composer": "S S Tamman",
+		"year": 2017
+	},
+
+	{
+		"_id": 3,
+		"Album-name": "Hrudyam",
+		"movie": "Gajini",
+		"composer": "DSP",
+		"year": 2004
+	},
+
+	{
+		"_id": 4,
+		"Album-name": "Asal em Gurthukuradu",
+		"movie": "Oohalu Gusagusalade",
+		"composer": "Chakri",
+		"year": 2015
+	}
+
+]
