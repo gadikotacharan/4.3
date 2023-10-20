@@ -1,0 +1,93 @@
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <div>
+      <h2>Song Collection</h2>
+
+      <!-- List Songs -->
+      <button (click)="loadSongs()">List Songs</button>
+      <ul *ngIf="songs">
+        <li *ngFor="let song of songs">
+          {{ song.albumName }} ({{ song.movie }}, {{ song.year }})
+          <button (click)="viewSong(song._id)">View</button>
+          <button (click)="editSong(song._id)">Edit</button>
+          <button (click)="deleteSong(song._id)">Delete</button>
+        </li>
+      </ul>
+
+      <!-- View/Edit Song -->
+      <div *ngIf="currentSong">
+        <h3>View/Edit Song</h3>
+        <input [(ngModel)]="currentSong.albumName" placeholder="Album Name">
+        <input [(ngModel)]="currentSong.movie" placeholder="Movie">
+        <input [(ngModel)]="currentSong.composer" placeholder="Composer">
+        <input [(ngModel)]="currentSong.year" placeholder="Year">
+        <button (click)="updateSong(currentSong._id)">Save Changes</button>
+        <button (click)="cancelEdit()">Cancel</button>
+      </div>
+
+      <!-- Create New Song -->
+      <h3>Create New Song</h3>
+      <input [(ngModel)]="newSong.albumName" placeholder="Album Name">
+      <input [(ngModel)]="newSong.movie" placeholder="Movie">
+      <input [(ngModel)]="newSong.composer" placeholder="Composer">
+      <input [(ngModel)]="newSong.year" placeholder="Year">
+      <button (click)="addSong()">Add Song</button>
+    </div>
+  `,
+})
+export class AppComponent implements OnInit {
+  private apiUrl = 'http://localhost:3000/api/songs';
+  songs: any[];
+  currentSong: any = {};
+  newSong: any = {};
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.loadSongs();
+  }
+
+  loadSongs() {
+    this.http.get<any[]>(this.apiUrl).subscribe((songs) => {
+      this.songs = songs;
+    });
+  }
+
+  viewSong(id: number) {
+    this.http.get<any>(`${this.apiUrl}/${id}`).subscribe((song) => {
+      this.currentSong = song;
+    });
+  }
+
+  editSong(id: number) {
+    this.viewSong(id);
+  }
+
+  updateSong(id: number) {
+    this.http.put(`${this.apiUrl}/${id}`, this.currentSong).subscribe(() => {
+      this.loadSongs();
+      this.currentSong = {};
+    });
+  }
+
+  cancelEdit() {
+    this.currentSong = {};
+  }
+
+  deleteSong(id: number) {
+    this.http.delete(`${this.apiUrl}/${id}`).subscribe(() => {
+      this.loadSongs();
+    });
+  }
+
+  addSong() {
+    this.http.post(this.apiUrl, this.newSong).subscribe(() => {
+      this.loadSongs();
+      this.newSong = {};
+    });
+  }
+}
